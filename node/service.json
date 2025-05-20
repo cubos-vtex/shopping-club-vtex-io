@@ -1,0 +1,22 @@
+{
+  "memory": 1024,
+  "ttl": 60,
+  "timeout": 60,
+  "minReplicas": 2,
+  "maxReplicas": 60,
+  "workers": 4,
+  "routes": {
+    "users": {
+      "path": "/_v/shopping-club-vtex-io/users",
+      "public": true
+    },
+    "setSessionClubUser": {
+      "path": "/_v/shopping-club-vtex-io/session/transform",
+      "public": true
+    },
+    "checkSessionClubUser": {
+      "path": "/_v/shopping-club-vtex-io/check-session-club-user",
+      "public": true
+    }
+  }
+}

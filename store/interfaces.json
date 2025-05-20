@@ -1,0 +1,12 @@
+{
+  "check-club-user": {
+    "component": "CheckClubUser",
+    "composition": "children",
+    "allowed": "*"
+  },
+  "subscribe-club": {
+    "component": "SubscribeClub",
+    "composition": "children",
+    "allowed": "*"
+  }
+}

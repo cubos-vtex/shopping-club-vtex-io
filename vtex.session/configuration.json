@@ -1,0 +1,10 @@
+{
+  "shopping-club-vtex-io": {
+    "input": {
+      "profile": ["email"]
+    },
+    "output": {
+      "public": ["isClubUser"]
+    }
+  }
+}
