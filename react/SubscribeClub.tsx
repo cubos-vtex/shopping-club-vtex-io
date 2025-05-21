@@ -19,7 +19,7 @@ function SubscribeClub() {
   const { mutate, isLoading } = useMutation<User, Error, InputUser>({
     mutationFn: (input) =>
       apiRequestFactory<User>({
-        url: '/_v/shopping-club-vtex-io/subscribe-club',
+        url: '/_v/shopping-club-vtex-io/users',
         method: 'POST',
         body: input,
       })(),
