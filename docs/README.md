@@ -6,9 +6,7 @@
 
 <!-- DOCS-IGNORE:start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- DOCS-IGNORE:end -->
 
@@ -35,6 +33,7 @@ Thanks goes to these wonderful people:
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tiago-freire"><img src="https://avatars.githubusercontent.com/u/921910?v=4?s=100" width="100px;" alt="Tiago Freire"/><br /><sub><b>Tiago Freire</b></sub></a><br /><a href="https://github.com/cubos-vtex/shopping-club-vtex-io/commits?author=tiago-freire" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/berseabra"><img src="https://avatars.githubusercontent.com/u/160257246?v=4?s=100" width="100px;" alt="berseabra"/><br /><sub><b>berseabra</b></sub></a><br /><a href="https://github.com/cubos-vtex/shopping-club-vtex-io/commits?author=berseabra" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
