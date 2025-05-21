@@ -38,7 +38,7 @@ function SubscribeClub() {
           `${SUCCESS_MESSAGE} A página será atualizada para carregar o seu perfil de membro do clube.`
         )
 
-        window.location.reload()
+        window.setTimeout(() => window.location.reload(), 3000)
       } else {
         showToast(
           `${SUCCESS_MESSAGE} Faça login com o e-mail ${data.email} para acessar o clube.`
@@ -53,27 +53,27 @@ function SubscribeClub() {
       if (error.message.includes('Missing required fields: ')) {
         const [, fields] = error.message.split(': ')
         const missingFields = fields.split(', ').map((field) => {
-          if (field === 'code') {
-            return 'Código de Indicação'
-          }
+          switch (field) {
+            case 'code':
+              return 'Código de Indicação'
 
-          if (field === 'name') {
-            return 'Nome'
-          }
+            case 'name':
+              return 'Nome'
 
-          if (field === 'email') {
-            return 'E-mail'
-          }
+            case 'email':
+              return 'E-mail'
 
-          return field
+            default:
+              return field
+          }
         })
 
         errorMessage = `Campos obrigatórios não foram preenchidos: ${missingFields.join(
           ', '
         )}`
-      } else if (errorMessage.includes('Invalid email')) {
+      } else if (error.message.includes('Invalid email')) {
         errorMessage = `O email inserido é inválido: ${variables.email}`
-      } else if (errorMessage.includes('already exists')) {
+      } else if (error.message.includes('already exists')) {
         errorMessage = `Já existe um usuário com o e-mail ${variables.email}`
       }
 
