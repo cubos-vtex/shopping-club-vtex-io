@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import React from 'react'
-import { Button } from 'vtex.styleguide'
+import React, { useState } from 'react'
+import { Button, Input, Modal } from 'vtex.styleguide'
 
 import { useToast } from './components/common/hooks'
 import { apiRequestFactory, withQueryClient } from './service'
@@ -9,13 +9,25 @@ import type { InputUser, User } from './typings'
 function SubscribeClub() {
   const { showToast } = useToast()
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [formData, setFormData] = useState<InputUser>({
+    code: '',
+    name: '',
+    email: '',
+  })
+
   const { mutate, isLoading } = useMutation<User, Error, InputUser>({
     mutationFn: (input) =>
       apiRequestFactory<User>({
-        url: '/_v/shopping-club-vtex-io/subscribe-club',
+        url: '/_v/shopping-club-vtex-io/users',
         method: 'POST',
         body: input,
       })(),
+    onSuccess: () => {
+      showToast({ message: 'Inscrição realizada com sucesso!' })
+      setFormData({ code: '', name: '', email: '' })
+      setIsModalOpen(false)
+    },
     onError(error) {
       console.error('Error subscribing to club:', error)
 
@@ -25,18 +37,64 @@ function SubscribeClub() {
     },
   })
 
-  // o console.log abaixo está aqui por enquanto só para não dar erro do eslint de variáveis não usadas
+  const handleSubmit = () => {
+    mutate(formData)
+  }
 
-  // eslint-disable-next-line no-console
-  console.log({ mutate, isLoading })
+  return (
+    <>
+      <Button onClick={() => setIsModalOpen(true)}>Inscrição no Clube</Button>
 
-  // o onClick do botão abaixo deve abrir um modal com o formulário de inscrição
-  // então no modal deve ter um botão que chama a função mutate com os dados do formulário (code, name e email)
-  // usar o isLoading no botão do modal para indicar quando o cadastro está sendo feito
-  // pode usar os textos em pt-BR mesmo: Código, Nome e E-mail
-  // o botão do modal pode ter o texto "Inscrever-se"
+      <Modal
+        isOpen={isModalOpen}
+        title="Inscrição no Clube de Compras"
+        onClose={() => setIsModalOpen(false)}
+      >
+        <div className="pa5">
+          <div className="mb4">
+            <Input
+              label="Código de Indicação"
+              value={formData.code}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, code: e.target.value })
+              }
+            />
+          </div>
 
-  return <Button>Inscrição no Clube</Button>
+          <div className="mb4">
+            <Input
+              label="Nome"
+              value={formData.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="mb4">
+            <Input
+              label="E-mail"
+              type="email"
+              value={formData.email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <Button
+              onClick={handleSubmit}
+              isLoading={isLoading}
+              disabled={isLoading}
+            >
+              Inscrever-se
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  )
 }
 
 export default withQueryClient(SubscribeClub)
