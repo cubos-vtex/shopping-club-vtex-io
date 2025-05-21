@@ -1,13 +1,19 @@
 import { useMutation } from '@tanstack/react-query'
 import React, { useState } from 'react'
+import type { SessionSuccess } from 'vtex.session-client'
+import { useRenderSession } from 'vtex.session-client'
 import { Button, Input, Modal } from 'vtex.styleguide'
 
 import { useToast } from './components/common/hooks'
 import { apiRequestFactory, withQueryClient } from './service'
 import type { InputUser, User } from './typings'
 
+const SUCCESS_MESSAGE = 'Inscrição realizada com sucesso.'
+
 function SubscribeClub() {
   const { showToast } = useToast()
+  const { session } = useRenderSession() as { session: SessionSuccess }
+  const sessionEmail = session?.namespaces?.profile?.email?.value
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState<InputUser>({
@@ -23,17 +29,55 @@ function SubscribeClub() {
         method: 'POST',
         body: input,
       })(),
-    onSuccess: () => {
-      showToast({ message: 'Inscrição realizada com sucesso!' })
+    onSuccess: (data) => {
       setFormData({ code: '', name: '', email: '' })
       setIsModalOpen(false)
+
+      if (sessionEmail === data.email) {
+        showToast(
+          `${SUCCESS_MESSAGE} A página será atualizada para carregar o seu perfil de membro do clube.`
+        )
+
+        window.location.reload()
+      } else {
+        showToast(
+          `${SUCCESS_MESSAGE} Faça login com o e-mail ${data.email} para acessar o clube.`
+        )
+      }
     },
-    onError(error) {
+    onError(error, variables) {
       console.error('Error subscribing to club:', error)
 
-      showToast({
-        message: `Ocorreu um erro ao se inscrever no clube: ${error.message}`,
-      })
+      let errorMessage = `Ocorreu um erro ao se inscrever no clube: ${error.message}`
+
+      if (error.message.includes('Missing required fields: ')) {
+        const [, fields] = error.message.split(': ')
+        const missingFields = fields.split(', ').map((field) => {
+          if (field === 'code') {
+            return 'Código de Indicação'
+          }
+
+          if (field === 'name') {
+            return 'Nome'
+          }
+
+          if (field === 'email') {
+            return 'E-mail'
+          }
+
+          return field
+        })
+
+        errorMessage = `Campos obrigatórios não foram preenchidos: ${missingFields.join(
+          ', '
+        )}`
+      } else if (errorMessage.includes('Invalid email')) {
+        errorMessage = `O email inserido é inválido: ${variables.email}`
+      } else if (errorMessage.includes('already exists')) {
+        errorMessage = `Já existe um usuário com o e-mail ${variables.email}`
+      }
+
+      showToast(errorMessage)
     },
   })
 

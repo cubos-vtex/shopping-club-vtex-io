@@ -43,7 +43,6 @@ export class SessionTransformerController extends BaseController {
       sessionData.namespaces.public?.isClubUser?.value ?? 'false'
 
     const isClubUser = JSON.parse(isClubUserValue) as boolean
-
     const profileEmail = sessionData.namespaces.profile?.email?.value
 
     if (!isClubUser && profileEmail) {
@@ -52,10 +51,10 @@ export class SessionTransformerController extends BaseController {
         .catch(() => null)
 
       if (clubUser) {
-        await this.ctx.clients.session.updateSession(
+        this.ctx.clients.session.updateSession(
           'isClubUser',
           'true',
-          ['*'],
+          CLUB_USER_ITEMS,
           sessionToken
         )
 
