@@ -1,6 +1,6 @@
 import { BaseController } from './base/BaseController'
 
-const CLUB_USER_ITEMS = ['public.isClubUser']
+const CLUB_USER_ITEMS = ['public.isClubUser', 'profile.email']
 
 export class SessionTransformerController extends BaseController {
   private readonly clubUser = this.ctx.clients.clubUser
@@ -39,9 +39,29 @@ export class SessionTransformerController extends BaseController {
       CLUB_USER_ITEMS
     )
 
-    const isClubUser = JSON.parse(
-      sessionData.namespaces.public?.isClubUser?.value
-    ) as boolean
+    const isClubUserValue =
+      sessionData.namespaces.public?.isClubUser?.value ?? 'false'
+
+    const isClubUser = JSON.parse(isClubUserValue) as boolean
+
+    const profileEmail = sessionData.namespaces.profile?.email?.value
+
+    if (!isClubUser && profileEmail) {
+      const clubUser = await this.clubUser
+        .getByEmail(profileEmail)
+        .catch(() => null)
+
+      if (clubUser) {
+        await this.ctx.clients.session.updateSession(
+          'isClubUser',
+          'true',
+          ['*'],
+          sessionToken
+        )
+
+        return { isClubUser: true }
+      }
+    }
 
     return { isClubUser }
   }
