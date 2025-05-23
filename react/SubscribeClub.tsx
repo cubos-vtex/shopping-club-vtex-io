@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { SessionSuccess } from 'vtex.session-client'
 import { useRenderSession } from 'vtex.session-client'
 import { Button, Input, Modal } from 'vtex.styleguide'
@@ -84,6 +84,14 @@ function SubscribeClub() {
   const handleSubmit = () => {
     mutate(formData)
   }
+
+  useEffect(() => {
+    console.info(`
+===============================
+Welcome to Shopping Club v${process.env.VTEX_APP_VERSION}
+===============================
+`)
+  }, [])
 
   return (
     <>
